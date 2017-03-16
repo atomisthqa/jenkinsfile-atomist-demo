@@ -11,6 +11,7 @@ def notifyAtomist(buildStatus, endpoint="https://webhook-staging.atomist.service
             number: env.BUILD_ID,
             status: buildStatus,
             full_url: env.BUILD_URL,
+            name: env.JOB_NAME,
             scm: [
                 url: gitRemoteUrl,
                 branch: gitBranchName,
