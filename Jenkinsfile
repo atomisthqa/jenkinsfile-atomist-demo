@@ -27,6 +27,7 @@ pipeline {
         stage('Example') {
             steps {
                 echo 'Hello World'
+                sh 'printenv'
             }
         }
     }
