@@ -8,6 +8,7 @@ def notifyAtomist(buildStatus, endpoint="https://webhook-staging.atomist.service
 
     def payload = JsonOutput.toJson([
         name: env.JOB_NAME,
+        id: env.BUILD_ID,
         build      : [
             number: env.BUILD_ID,
             status: buildStatus,
