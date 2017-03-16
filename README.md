@@ -2,5 +2,3 @@
 
 This project should demonstrate how to notify Atomsit during a Jenkins build
 using a pipeline job.
-
-A change. another one.
