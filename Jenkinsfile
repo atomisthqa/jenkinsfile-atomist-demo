@@ -7,11 +7,11 @@ def notifyAtomist(buildStatus, endpoint="https://webhook-staging.atomist.service
     def gitBranchName = sh(returnStdout: true, script: 'git name-rev --always --name-only HEAD').trim()
 
     def payload = JsonOutput.toJson([
+        name: env.JOB_NAME,
         build      : [
             number: env.BUILD_ID,
             status: buildStatus,
             full_url: env.BUILD_URL,
-            name: env.JOB_NAME,
             scm: [
                 url: gitRemoteUrl,
                 branch: gitBranchName,
