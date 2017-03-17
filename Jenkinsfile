@@ -46,9 +46,11 @@ def notifyAtomist(buildStatus, buildPhase="FINALIZED",
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
+        stage('Declarative: Checkout SCM') {
             steps {
                 notifyAtomist("UNSTABLE", "Started")
+                checkout scm
+                echo '${scm.branch}'
             }
         }
         stage('Example') {
