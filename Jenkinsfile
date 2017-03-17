@@ -41,7 +41,6 @@ def notifyAtomist(buildStatus, buildPhase="FINALIZED",
     ])
 
     sh "curl --silent -XPOST -H 'Content-Type: application/json' -d \'${payload}\' ${endpoint}"
-    sh "sleep 8"
 }
  
 pipeline {
@@ -52,6 +51,8 @@ pipeline {
                 // notifiy Atomist the buid starts now
                 // could be at any state but should be done first
                 notifyAtomist("UNSTABLE", "STARTED")
+                // let's pretend something is being done
+                sh "sleep 10"
             }
         }
     }
