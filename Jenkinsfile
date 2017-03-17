@@ -5,12 +5,16 @@ def notifyAtomist(buildStatus, endpoint="https://webhook-staging.atomist.service
     def gitRemoteUrl = sh(returnStdout: true, script: 'git config --get remote.origin.url').trim()
     def gitCommitSha = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
 
+    // this is defined in Multi Pipeline jobs
     def gitBranchName = env.BRANCH_NAME
+    
+    // In single pipeline mode, we must query the local git metadata
+    // and assume the user set the name for the remote in the configuration 
     if (gitBranchName == null)
         gitBranchName = sh(returnStdout: true, script: 'git name-rev --always --name-only HEAD').trim().replace('remotes/origin/', '')
 
     def payload = JsonOutput.toJson([
-        name: env.JOB_BASE_NAME,
+        name: env.JOB_NAME,
         duration: currentBuild.duration,
         build      : [
             number: env.BUILD_NUMBER,
