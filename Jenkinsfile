@@ -8,7 +8,7 @@ def notifyAtomist(buildStatus, endpoint="https://webhook-staging.atomist.service
 
     def payload = JsonOutput.toJson([
         name: env.JOB_BASE_NAME,
-        duration: 
+        duration: currentBuild.duration,
         build      : [
             number: env.BUILD_NUMBER,
             status: currentBuild.result,
@@ -21,9 +21,9 @@ def notifyAtomist(buildStatus, endpoint="https://webhook-staging.atomist.service
                     number: env.CHANGE_ID,
                     url: env.CHANGE_URL,
                     author: env.CHANGE_AUTHOR,
-                    author_email: CHANGE_AUTHOR_EMAIL
+                    author_email: env.CHANGE_AUTHOR_EMAIL
                 ]
-            ],
+            ]
         ]
     ])
     sh "curl --silent -XPOST -H 'Content-Type: application/json' -d \'${payload}\' ${endpoint}" 
