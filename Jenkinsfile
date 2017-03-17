@@ -2,8 +2,8 @@ import groovy.json.JsonOutput
 
 def notifyAtomist(buildStatus, endpoint="https://webhook-staging.atomist.services/atomist/jenkins") {
 
-    //def gitRemoteUrl = sh(returnStdout: true, script: 'git config --get remote.origin.url').trim()
-    //def gitCommitSha = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+    def gitRemoteUrl = sh(returnStdout: true, script: 'git config --get remote.origin.url').trim()
+    def gitCommitSha = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
     //def gitBranchName = sh(returnStdout: true, script: 'git name-rev --always --name-only HEAD').trim()
 
     def payload = JsonOutput.toJson([
@@ -11,12 +11,12 @@ def notifyAtomist(buildStatus, endpoint="https://webhook-staging.atomist.service
         duration: currentBuild.duration,
         build      : [
             number: env.BUILD_NUMBER,
-            status: currentBuild.result,
+            status: buildStatus,
             full_url: env.BUILD_URL,
             scm: [
-                url: env.GIT_URL,
+                url: gitRemoteUrl,
                 branch: env.BRANCH_NAME,
-                commit: env.GIT_COMMIT,
+                commit: gitCommitSha,
                 pr: [
                     number: env.CHANGE_ID,
                     url: env.CHANGE_URL,
