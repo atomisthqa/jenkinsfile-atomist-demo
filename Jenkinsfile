@@ -48,8 +48,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                // notifiy Atomist the buid starts now
                 notifyAtomist("UNSTABLE", "Started")
-                println scm.branch
             }
         }
     }
