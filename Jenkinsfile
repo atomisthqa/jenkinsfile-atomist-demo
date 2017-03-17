@@ -4,7 +4,10 @@ def notifyAtomist(buildStatus, endpoint="https://webhook-staging.atomist.service
 
     def gitRemoteUrl = sh(returnStdout: true, script: 'git config --get remote.origin.url').trim()
     def gitCommitSha = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-    //def gitBranchName = sh(returnStdout: true, script: 'git name-rev --always --name-only HEAD').trim()
+
+    def gitBranchName = env.BRANCH_NAME
+    if (gitBranchName == null)
+        gitBranchName = sh(returnStdout: true, script: 'git name-rev --always --name-only HEAD').trim()
 
     def payload = JsonOutput.toJson([
         name: env.JOB_BASE_NAME,
@@ -15,7 +18,7 @@ def notifyAtomist(buildStatus, endpoint="https://webhook-staging.atomist.service
             full_url: env.BUILD_URL,
             scm: [
                 url: gitRemoteUrl,
-                branch: env.BRANCH_NAME,
+                branch: gitBranchName,
                 commit: gitCommitSha,
                 pr: [
                     number: env.CHANGE_ID,
