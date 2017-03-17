@@ -41,7 +41,7 @@ def notifyAtomist(buildStatus, buildPhase="FINALIZED",
     ])
 
     sh "curl --silent -XPOST -H 'Content-Type: application/json' -d \'${payload}\' ${endpoint}"
-    sh "sleep 10"
+    sh "sleep 8"
 }
  
 pipeline {
