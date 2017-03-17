@@ -43,12 +43,14 @@ def notifyAtomist(buildStatus, buildPhase="FINALIZED",
     sh "curl --silent -XPOST -H 'Content-Type: application/json' -d \'${payload}\' ${endpoint}"
 }
 
-// inform Atomist this build is starting
-notifyAtomist("UNSTABLE", "STARTED")
-
 pipeline {
     agent any
     stages {
+        stage('Checkout') {
+            steps {
+                notifyAtomist("UNSTABLE", "Started")
+            }
+        }
         stage('Example') {
             steps {
                 echo 'Hello World'
