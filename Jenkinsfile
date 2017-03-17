@@ -49,6 +49,7 @@ pipeline {
         stage('Build') {
             steps {
                 // notifiy Atomist the buid starts now
+                // could be at any state but should be done first
                 notifyAtomist("UNSTABLE", "STARTED")
             }
         }
