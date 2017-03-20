@@ -1,13 +1,9 @@
 import groovy.json.JsonOutput
 
-
 /*
- * Notify the Atomist services about the status of a build based from a 
- * git repository.
+ * Retrieve current SCM information from local checkout 
  */
-def notifyAtomist(buildStatus, buildPhase="FINALIZED", 
-                  endpoint="https://webhook-staging.atomist.services/atomist/jenkins") {
-
+def getSCMInformation():
     def gitRemoteUrl = sh(returnStdout: true, script: 'git config --get remote.origin.url').trim()
     def gitCommitSha = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
 
@@ -18,6 +14,18 @@ def notifyAtomist(buildStatus, buildPhase="FINALIZED",
     if (gitBranchName == null)
         gitBranchName = sh(returnStdout: true, script: 'git name-rev --always --name-only HEAD').trim().replace('remotes/origin/', '')
 
+    return gitRemoteUrl, gitBranchName, gitCommitSha
+    
+
+/*
+ * Notify the Atomist services about the status of a build based from a 
+ * git repository.
+ */
+def notifyAtomist(buildStatus, buildPhase="FINALIZED", 
+                  endpoint="https://webhook-staging.atomist.services/atomist/jenkins") {
+
+    scmRemoteURL, branchName, commitSha = getSCMInformation()
+
     def payload = JsonOutput.toJson([
         name: env.JOB_NAME,
         duration: currentBuild.duration,
@@ -27,9 +35,9 @@ def notifyAtomist(buildStatus, buildPhase="FINALIZED",
             status: buildStatus,
             full_url: env.BUILD_URL,
             scm: [
-                url: gitRemoteUrl,
-                branch: gitBranchName,
-                commit: gitCommitSha,
+                url: scmRemoteURL,
+                branch: branchName,
+                commit: commitSha,
                 pr: [
                     number: env.CHANGE_ID,
                     url: env.CHANGE_URL,
@@ -42,7 +50,7 @@ def notifyAtomist(buildStatus, buildPhase="FINALIZED",
 
     sh "curl --silent -XPOST -H 'Content-Type: application/json' -d \'${payload}\' ${endpoint}"
 }
- 
+
 pipeline {
     agent any
     stages {
