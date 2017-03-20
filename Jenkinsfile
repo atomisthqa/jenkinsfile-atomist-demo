@@ -3,7 +3,7 @@ import groovy.json.JsonOutput
 /*
  * Retrieve current SCM information from local checkout 
  */
-def getSCMInformation():
+def getSCMInformation() {
     def gitRemoteUrl = sh(returnStdout: true, script: 'git config --get remote.origin.url').trim()
     def gitCommitSha = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
 
@@ -15,7 +15,7 @@ def getSCMInformation():
         gitBranchName = sh(returnStdout: true, script: 'git name-rev --always --name-only HEAD').trim().replace('remotes/origin/', '')
 
     return gitRemoteUrl, gitBranchName, gitCommitSha
-    
+}
 
 /*
  * Notify the Atomist services about the status of a build based from a 
